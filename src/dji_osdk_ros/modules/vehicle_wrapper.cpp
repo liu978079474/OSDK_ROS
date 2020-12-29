@@ -1438,6 +1438,16 @@ static T_OsdkOsalHandler osalHandler = {
     return false;
   }
 
+    bool VehicleWrapper::ForceLanding(int timeout)
+  {
+    ErrorCode::ErrorCodeType ack = vehicle->flightController->startForceLandingSync(timeout);
+    if (ack == ErrorCode::SysCommonErr::Success)
+    {
+      return true;
+    }
+    return false;
+  }
+
   bool VehicleWrapper::moveByPositionOffset(ACK::ErrorCode& ack, int timeout, MoveOffset& p_offset)
   {
     using namespace Telemetry;

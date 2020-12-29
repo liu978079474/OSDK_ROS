@@ -96,6 +96,7 @@ namespace dji_osdk_ros
       bool setHomeAltitude(uint16_t altitude, int timeout = 1);
       bool goHome(ACK::ErrorCode& ack, int timeout);
       bool goHomeAndConfirmLanding(int timeout);
+      bool ForceLanding(int timeout);
       bool setAvoid(bool enable);
       bool setUpwardsAvoidance(bool enable);
 

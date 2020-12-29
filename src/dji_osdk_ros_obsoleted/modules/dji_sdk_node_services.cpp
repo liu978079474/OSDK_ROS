@@ -161,6 +161,7 @@ DJISDKNode::droneTaskCallback(dji_osdk_ros::DroneTaskControl::Request&  request,
   ROS_DEBUG("called droneTaskCallback");
 
   ACK::ErrorCode ack;
+  ErrorCode::ErrorCodeType dji_ack;
   if (request.task == 4)
   {
     // takeoff
@@ -178,6 +179,12 @@ DJISDKNode::droneTaskCallback(dji_osdk_ros::DroneTaskControl::Request&  request,
     // gohome
     ack = vehicle->control->goHome(WAIT_TIMEOUT);
     ROS_DEBUG("called vehicle->control->goHome()");
+  }
+  else if (request.task == 31)
+  {
+    //startForceLandingSync
+    dji_ack = vehicle->flightController->startForceLandingSync(WAIT_TIMEOUT);
+    ROS_DEBUG("called vehicle->flightController->startForceLandingSync()");
   }
   else
   {

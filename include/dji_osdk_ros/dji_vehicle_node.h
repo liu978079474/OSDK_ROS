@@ -177,6 +177,15 @@ namespace dji_osdk_ros
       bool initTopic();
       bool initDataSubscribeFromFC();
       bool cleanUpSubscribeFromFC();
+
+      //! flight control subscriber callbacks
+      void flightControl(uint8_t flag, float32_t xSP, float32_t ySP, float32_t zSP, float32_t yawSP);
+      bool initFlightControl();
+      void flightControlSetpointCallback(const sensor_msgs::Joy::ConstPtr& pMsg);
+      void flightControlPxPyPzYawCallback(const sensor_msgs::Joy::ConstPtr& pMsg);
+      void flightControlVxVyVzYawrateCallback(const sensor_msgs::Joy::ConstPtr& pMsg);
+      void flightControlRollPitchPzYawrateCallback(const sensor_msgs::Joy::ConstPtr& pMsg);
+
     protected:
       /*! services */
       /*! for general */
@@ -303,6 +312,13 @@ namespace dji_osdk_ros
       ros::Publisher waypointV2_mission_state_publisher_;
       ros::Publisher waypointV2_mission_event_publisher_;
 
+      /*! publishers */
+      //! flight control subscribers
+      ros::Subscriber flight_control_sub;
+      ros::Subscriber flight_control_position_yaw_sub;
+      ros::Subscriber flight_control_velocity_yawrate_sub;
+      ros::Subscriber flight_control_rollpitch_yawrate_vertpos_sub;
+
     protected:
       /*! for general */
       bool getDroneTypeCallback(dji_osdk_ros::GetDroneType::Request &request,
@@ -416,6 +432,7 @@ namespace dji_osdk_ros
     private:
       ros::NodeHandle nh_;
       VehicleWrapper* ptr_wrapper_;
+      Vehicle* vehicle;
       TelemetryType telemetry_from_fc_;
 
       int           app_id_;

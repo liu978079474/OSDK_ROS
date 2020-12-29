@@ -1,7 +1,10 @@
 add_subdirectory(modules)
 add_subdirectory(samples)
 
+
 FILE(GLOB EXAMPLES *.cc *.c *.cpp)
+
+set(INCLUDE_PATH "/home/jzi/catkin_landing/src/Onboard-SDK-ROS/include")
 
 if(OPEN_CV_3_3_0_INSTALLED AND FOUND_OPENCV_VIZ)
 add_definitions(-DOPEN_CV_INSTALLED)
@@ -18,6 +21,7 @@ FOREACH(EXAMPLE ${EXAMPLES})
 
   TARGET_LINK_LIBRARIES(${MY_TARGET}
                         ${PROJECT_NAME}
+			jsoncpp
                         )
 
   INSTALL(TARGETS ${MY_TARGET}

@@ -188,10 +188,10 @@ add_service_files(
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   geometry_msgs
-   nav_msgs
+#   geometry_msgs
+#   nav_msgs
    std_msgs  # Or other packages containing msgs
-   sensor_msgs
+#   sensor_msgs
  )
 
 ################################################
@@ -225,7 +225,7 @@ add_service_files(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 MESSAGE(STATUS "USB INCLUDE: ${LIBUSB_1_INCLUDE_DIR}")
 catkin_package(
-  INCLUDE_DIRS include
+	INCLUDE_DIRS include
 #  LIBRARIES onboard-sdk-ros
   CATKIN_DEPENDS
     message_runtime
@@ -244,6 +244,9 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
  include
+    #include/macro_lib
+    #include/math_lib
+    #include/ctrl_lib
  #${DJIOSDK_INCLUDE_DIRS}
  ${LIBUSB_1_INCLUDE_DIR}
  ${catkin_INCLUDE_DIRS}

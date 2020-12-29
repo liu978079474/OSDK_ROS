@@ -74,6 +74,8 @@ VehicleNode::VehicleNode():telemetry_from_fc_(TelemetryType::USE_ROS_BROADCAST),
   }
   ROS_INFO_STREAM("VehicleNode Start");
 
+  vehicle = ptr_wrapper_->getVehicle();
+
   if (NULL != ptr_wrapper_->getVehicle()->subscribe && (!user_select_broadcast_))
   {
     telemetry_from_fc_ = TelemetryType::USE_ROS_SUBSCRIBE;
@@ -83,6 +85,7 @@ VehicleNode::VehicleNode():telemetry_from_fc_(TelemetryType::USE_ROS_BROADCAST),
   initCameraModule();
   initService();
   initTopic();
+  initFlightControl();
 }
 
 VehicleNode::~VehicleNode()
@@ -97,6 +100,30 @@ VehicleNode::~VehicleNode()
     int timeout = 1;
     ptr_wrapper_->teardownSubscription(pkgIndex, timeout);
   }
+}
+
+bool VehicleNode::initFlightControl()
+{
+  flight_control_sub = nh_.subscribe<sensor_msgs::Joy>(
+    "dji_osdk_ros/flight_control_setpoint_generic", 10,
+    &VehicleNode::flightControlSetpointCallback,   this);
+
+  flight_control_position_yaw_sub =
+    nh_.subscribe<sensor_msgs::Joy>(
+      "dji_osdk_ros/flight_control_setpoint_ENUposition_yaw", 10,
+      &VehicleNode::flightControlPxPyPzYawCallback, this);
+
+  flight_control_velocity_yawrate_sub =
+    nh_.subscribe<sensor_msgs::Joy>(
+      "dji_osdk_ros/flight_control_setpoint_ENUvelocity_yawrate", 10,
+      &VehicleNode::flightControlVxVyVzYawrateCallback, this);
+
+  flight_control_rollpitch_yawrate_vertpos_sub =
+    nh_.subscribe<sensor_msgs::Joy>(
+      "dji_osdk_ros/flight_control_setpoint_rollpitch_yawrate_zposition", 10,
+      &VehicleNode::flightControlRollPitchPzYawrateCallback, this);
+
+  return true;
 }
 
 bool VehicleNode::initGimbalModule()
@@ -1034,6 +1061,15 @@ bool VehicleNode::taskCtrlCallback(FlightTaskControl::Request&  request, FlightT
         }
         break;
       }
+    case FlightTaskControl::Request::TASK_FORCE_LANDING:
+      {
+        ROS_INFO_STREAM("call force land service");
+        if (ptr_wrapper_->ForceLanding(FLIGHT_CONTROL_WAIT_TIMEOUT))
+        {
+          response.result = true;
+        }
+        break;
+      }
     default:
       {
         ROS_INFO_STREAM("No recognized task");
@@ -1078,13 +1114,31 @@ bool VehicleNode::gimbalCtrlCallback(GimbalAction::Request& request, GimbalActio
   }
   else
   {
-    GimbalRotationData gimbalRotationData;
-    gimbalRotationData.rotationMode = request.rotationMode;
-    gimbalRotationData.pitch = request.pitch;
-    gimbalRotationData.roll  = request.roll;
-    gimbalRotationData.yaw   = request.yaw;
-    gimbalRotationData.time  = request.time;
-    response.result = ptr_wrapper_->rotateGimbal(static_cast<PayloadIndex>(request.payload_index), gimbalRotationData);
+    if(request.rotationMode == 0)
+    {
+      GimbalRotationData gimbalRotationData;
+      gimbalRotationData.rotationMode = request.rotationMode;
+      gimbalRotationData.pitch = request.pitch;
+      gimbalRotationData.roll  = request.roll;
+      gimbalRotationData.yaw   = request.yaw;
+      gimbalRotationData.time  = request.time;
+      response.result = ptr_wrapper_->rotateGimbal(static_cast<PayloadIndex>(request.payload_index), gimbalRotationData);
+    }else if(request.rotationMode == 1)
+    {
+      DJI::OSDK::Gimbal::AngleData angle_data;
+      //! OSDK takes 0.1 sec as unit
+      angle_data.duration = request.time * 10;
+      angle_data.mode     |= 0;
+      angle_data.mode     |= 0;
+      angle_data.mode     |= 0 << 1;
+      angle_data.mode     |= 0 << 2;
+      angle_data.mode     |= 0 << 3;
+      //! OSDK takes 0.1 deg as unit
+      angle_data.roll     = RAD2DEG(DEG2RAD(request.roll)) * 10;
+      angle_data.pitch    = RAD2DEG(DEG2RAD(request.pitch)) * 10;
+      angle_data.yaw      = RAD2DEG(DEG2RAD(request.yaw)) * 10;
+      vehicle->gimbal->setAngle(&angle_data);
+    }
   }
 
   sleep(2);

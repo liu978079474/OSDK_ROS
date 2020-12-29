@@ -1,8 +1,10 @@
 # DJI Onboard SDK ROS 4.0.1
 
+
+
 ## Latest Update
 
-OSDK-ROS 4.0.1 was released on 24 August 2020.You need to read newest update below to get update information. Please see the [release notes](https://developer.dji.com/onboard-sdk/downloads/) and [ROS sample setup](https://developer.dji.com/cn/onboard-sdk/documentation/development-workflow/environment-setup.html#linux-with-ros) for more information.And We will update [ROS Wiki](http://wiki.ros.org/dji_sdk/) later.
+OSDK-ROS 4.0.1 was released on 24 August 2020.Self_OSDK_ROS based on DJI OSDK-ROS 4.0.1 developmment.Newly added control interfaces for speed control flight,force landing and gimbal rotation control api.
 
 ### 1. feature  
 This 4.0.1 version releases a feature package: dji_osdk_ros. The package contains two different framework's interface. OSDK-ROS-obsoleted kept ros3.8.1's interface.  

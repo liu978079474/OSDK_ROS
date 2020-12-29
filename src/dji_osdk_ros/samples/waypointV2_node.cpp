@@ -36,7 +36,7 @@ void gpsPositionSubCallback(const sensor_msgs::NavSatFix::ConstPtr& gpsPosition)
 void waypointV2MissionEventSubCallback(const dji_osdk_ros::WaypointV2MissionEventPush::ConstPtr& waypointV2MissionEventPush)
 {
   waypoint_V2_mission_event_push_ = *waypointV2MissionEventPush;
-
+/*
   ROS_INFO("waypoint_V2_mission_event_push_.event ID :0x%x\n", waypoint_V2_mission_event_push_.event);
 
   if(waypoint_V2_mission_event_push_.event == 0x01)
@@ -61,18 +61,20 @@ void waypointV2MissionEventSubCallback(const dji_osdk_ros::WaypointV2MissionEven
   {
     ROS_INFO("currentMissionExecNum:%d\n", waypoint_V2_mission_event_push_.currentMissionExecNum);
   }
+*/
 }
 
 void waypointV2MissionStateSubCallback(const dji_osdk_ros::WaypointV2MissionStatePush::ConstPtr& waypointV2MissionStatePush)
 {
   waypoint_V2_mission_state_push_ = *waypointV2MissionStatePush;
-
+/*
   ROS_INFO("waypointV2MissionStateSubCallback");
   ROS_INFO("missionStatePushAck->commonDataVersion:%d\n",waypoint_V2_mission_state_push_.commonDataVersion);
   ROS_INFO("missionStatePushAck->commonDataLen:%d\n",waypoint_V2_mission_state_push_.commonDataLen);
   ROS_INFO("missionStatePushAck->data.state:0x%x\n",waypoint_V2_mission_state_push_.state);
   ROS_INFO("missionStatePushAck->data.curWaypointIndex:%d\n",waypoint_V2_mission_state_push_.curWaypointIndex);
   ROS_INFO("missionStatePushAck->data.velocity:%d\n",waypoint_V2_mission_state_push_.velocity);
+*/
 }
 
 void setWaypointV2Defaults(dji_osdk_ros::WaypointV2& waypointV2)
@@ -103,6 +105,8 @@ std::vector<dji_osdk_ros::WaypointV2> generatePolygonWaypoints(ros::NodeHandle &
   startPoint.latitude  = gps_position_.latitude * C_PI / 180.0;
   startPoint.longitude = gps_position_.longitude * C_PI / 180.0;
   startPoint.relativeHeight = 15;
+  std::cout <<  "------------startPoint.latitude=" << startPoint.latitude << std::endl;
+  std::cout <<  "------------startPoint.longitude=" << startPoint.longitude << std::endl;
   setWaypointV2Defaults(startPoint);
   waypointList.push_back(startPoint);
 
@@ -115,6 +119,8 @@ std::vector<dji_osdk_ros::WaypointV2> generatePolygonWaypoints(ros::NodeHandle &
     waypointV2.latitude = Y/EARTH_RADIUS + startPoint.latitude;
     waypointV2.longitude = X/(EARTH_RADIUS * cos(startPoint.latitude)) + startPoint.longitude;
     waypointV2.relativeHeight = startPoint.relativeHeight ;
+    std::cout << i << "------------waypointV2.latitude=" << waypointV2.latitude << std::endl;
+    std::cout << i << "------------waypointV2.longitude=" << waypointV2.longitude << std::endl;
     waypointList.push_back(waypointV2);
   }
   waypointList.push_back(startPoint);

@@ -9,8 +9,9 @@
  *
  */
 
-#include <dji_sdk/dji_sdk_node.h>
+#include <dji_osdk_ros/dji_vehicle_node.h>
 
+using namespace dji_osdk_ros;
 /*!
  * @brief The flight controller takes control signals with frame convention:
  *   body:   Forward-Right for horizontal
@@ -27,7 +28,7 @@
  *  the control signal the client generates is FLU or ENU, and needs to be
  *  transformed to the convention of the flight controller.
  */
-void DJISDKNode::flightControl(uint8_t flag, float xSP, float ySP, float zSP, float yawSP)
+void VehicleNode::flightControl(uint8_t flag, float xSP, float ySP, float zSP, float yawSP)
 {
   uint8_t HORI  = (flag & 0xC0);
   uint8_t VERT  = (flag & 0x30);
@@ -99,7 +100,7 @@ void DJISDKNode::flightControl(uint8_t flag, float xSP, float ySP, float zSP, fl
     rotationSrc.setRPY(0.0, 0.0, yawSP);
 
     //The last term should be transpose, but since it's symmetric ...
-    tf::Matrix3x3 rotationDes (R_ENU2NED * rotationSrc * R_FLU2FRD);
+    tf::Matrix3x3 rotationDes (R_ENU2NED_ * rotationSrc * R_FLU2FRD_);
 
     double temp1, temp2;
     rotationDes.getRPY(temp1, temp2, yawCmd);
@@ -110,13 +111,12 @@ void DJISDKNode::flightControl(uint8_t flag, float xSP, float ySP, float zSP, fl
   {
     yawCmd = RAD2DEG(-yawSP);
   }
-
   Control::CtrlData ctrlData(flag, xCmd, yCmd, zCmd, yawCmd);
   vehicle->control->flightCtrl(ctrlData);
 }
 
 void
-DJISDKNode::flightControlSetpointCallback(
+VehicleNode::flightControlSetpointCallback(
   const sensor_msgs::Joy::ConstPtr& pMsg)
 { 
   float xSP    = pMsg->axes[0];
@@ -129,7 +129,7 @@ DJISDKNode::flightControlSetpointCallback(
 }
 
 void
-DJISDKNode::flightControlPxPyPzYawCallback(
+VehicleNode::flightControlPxPyPzYawCallback(
   const sensor_msgs::Joy::ConstPtr& pMsg)
 {
   uint8_t flag = (Control::VERTICAL_POSITION |
@@ -147,7 +147,7 @@ DJISDKNode::flightControlPxPyPzYawCallback(
 }
 
 void
-DJISDKNode::flightControlVxVyVzYawrateCallback(
+VehicleNode::flightControlVxVyVzYawrateCallback(
   const sensor_msgs::Joy::ConstPtr& pMsg)
 {
   uint8_t flag = (Control::VERTICAL_VELOCITY |
@@ -155,6 +155,7 @@ DJISDKNode::flightControlVxVyVzYawrateCallback(
                   Control::YAW_RATE |
                   Control::HORIZONTAL_GROUND |
                   Control::STABLE_ENABLE);
+
   float vx        = pMsg->axes[0];
   float vy        = pMsg->axes[1];
   float vz        = pMsg->axes[2];
@@ -164,7 +165,7 @@ DJISDKNode::flightControlVxVyVzYawrateCallback(
 }
 
 void
-DJISDKNode::flightControlRollPitchPzYawrateCallback(
+VehicleNode::flightControlRollPitchPzYawrateCallback(
   const sensor_msgs::Joy::ConstPtr& pMsg)
 {
   uint8_t flag = (Control::VERTICAL_POSITION |
