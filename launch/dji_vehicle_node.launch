@@ -1,5 +1,5 @@
 <launch>
-    <arg name="ACM_name"/>
+    <arg name="ACM_name"/> 
     <node pkg="dji_osdk_ros" type="dji_vehicle_node" name="vehicle_node" output="screen">
     <!-- node parameters -->
     <param name="acm_name" type="string" value="$(arg ACM_name)"/>
