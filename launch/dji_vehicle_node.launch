@@ -5,10 +5,10 @@
     <param name="acm_name" type="string" value="$(arg ACM_name)"/>
     <param name="serial_name" type="string" value="/dev/ttyTHS1"/>
     <param name="baud_rate" type="int" value="1000000"/>
-    <param name="app_id" type="int" value="1065625"/>
+    <param name="app_id" type="int" value="1098852"/>
     <param name="app_version" type="int" value="1"/>
     <param name="align_time" type="bool" value="false"/>
-    <param name="enc_key" type="string" value="01a2171ac599e7ca061d5b5700bf11f75cc52ba6e09774c260a80ba912b69a3c"/>
+    <param name="enc_key" type="string" value="e3b237bee1bcfb56e81f8c483944f74ba1e0247654880e2a3580e401893bd1ea"/>
     <param name="use_broadcast" type="bool" value="false"/>
     </node>
 </launch>
