@@ -113,6 +113,7 @@ add_service_files(
 
   GetDroneType.srv
   GetGimbalType.srv
+  GetCameraType.srv
   GetM300StereoParams.srv
   FlightTaskControl.srv
   ObtainControlAuthority.srv

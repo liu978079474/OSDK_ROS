@@ -199,6 +199,30 @@ static T_OsdkOsalHandler osalHandler = {
       return true;
   }
 
+  bool VehicleWrapper::getCameraName(const PayloadIndex& payloadIndex, std::string *camera_name)
+  {
+    if (!vehicle || !vehicle->cameraManager) {
+      DERROR("vehicle or cameraManager is a null value.");
+      return false;
+    }
+
+    ErrorCode::ErrorCodeType retCode;
+    PayloadIndexType index = static_cast<PayloadIndexType>(payloadIndex);
+    CameraManager *p = vehicle->cameraManager;
+
+    DSTATUS("Start to get name of the camera %d", index);
+    std::string name;
+    retCode = p->getCameraModuleName(index, name);
+    *camera_name = name;
+    if (retCode != ErrorCode::SysCommonErr::Success) {
+      std::cout << "get gimbal name fail. Error code : 0x" << hex << retCode << std::endl;
+      ErrorCode::printErrorCodeMsg(retCode);
+      return false;
+    }
+
+    return true;
+  }
+
   bool VehicleWrapper::setEV(const PayloadIndex& payloadIndex, const ExposureCompensation& exposureCompensation)
   {
     if (!vehicle || !vehicle->cameraManager) {
