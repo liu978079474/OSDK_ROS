@@ -212,6 +212,7 @@ void VehicleNode::initService()
    *  @platforms M210V2, M300
    */
   get_drone_type_server_ = nh_.advertiseService("get_drone_type", &VehicleNode::getDroneTypeCallback, this);
+  get_gimbal_type_server_ = nh_.advertiseService("get_gimbal_type", &VehicleNode::getGimbalTypeCallback, this);
 
   /*! @brief
    *  flight control server
@@ -1093,6 +1094,22 @@ bool VehicleNode::taskCtrlCallback(FlightTaskControl::Request&  request, FlightT
     return false;
   }
 }
+
+bool VehicleNode::getGimbalTypeCallback(dji_osdk_ros::GetGimbalType::Request &request,dji_osdk_ros::GetGimbalType::Response &response)
+{
+  ROS_DEBUG("called getGimbalTypeCallback");
+
+  if(ptr_wrapper_ == nullptr)
+  {
+    ROS_ERROR_STREAM("Vehicle modules is nullptr");
+    return true;
+  }
+  std::string name;
+  ptr_wrapper_-> getGimbalName(static_cast<PayloadIndex>(request.payload_index), &name);
+  response.gimbal_name = name;
+  return true;
+}
+
 
 bool VehicleNode::gimbalCtrlCallback(GimbalAction::Request& request, GimbalAction::Response& response)
 {

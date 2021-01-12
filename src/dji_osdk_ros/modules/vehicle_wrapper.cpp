@@ -1864,6 +1864,30 @@ static T_OsdkOsalHandler osalHandler = {
     return true;
   }
 
+  bool VehicleWrapper::getGimbalName(const PayloadIndex& payloadIndex, std::string *gimbal_name)
+  {
+    if (!vehicle || !vehicle->gimbalManager) {
+      DERROR("vehicle or gimbalManager is a null value.");
+      return false;
+    }
+
+    ErrorCode::ErrorCodeType retCode;
+    PayloadIndexType index = static_cast<PayloadIndexType>(payloadIndex);
+    GimbalManager *p = vehicle->gimbalManager;
+
+    DSTATUS("Start to get name of the gimbal %d", index);
+    std::string name;
+    retCode = p->getGimbalModuleName(index, name);
+    *gimbal_name = name;
+    if (retCode != ErrorCode::SysCommonErr::Success) {
+      std::cout << "get gimbal name fail. Error code : 0x" << hex << retCode << std::endl;
+      ErrorCode::printErrorCodeMsg(retCode);
+      return false;
+    }
+
+    return true;
+  }
+
   bool VehicleWrapper::resetGimbal(const PayloadIndex& payloadIndex)
   {
     if (!vehicle || !vehicle->gimbalManager) {

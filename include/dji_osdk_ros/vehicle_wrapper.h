@@ -88,6 +88,7 @@ namespace dji_osdk_ros
       /*! Parts of Gimbal */
       GimbalSingleData getGimbalData(const PayloadIndex& payloadIndex);
       bool rotateGimbal(const PayloadIndex& PayloadIndex, const GimbalRotationData& rotationData);
+      bool getGimbalName(const PayloadIndex& payloadIndex, std::string *gimbal_name);
       bool resetGimbal(const PayloadIndex& payloadIndex);
 
       /*! Parts of Flight Control*/
