@@ -84,6 +84,7 @@
 #include <dji_osdk_ros/GetDroneType.h>
 #include <dji_osdk_ros/GetGimbalType.h>
 #include <dji_osdk_ros/GetCameraType.h>
+#include <dji_osdk_ros/GetCameraVersion.h>
 //mission services
 #include <dji_osdk_ros/MissionStatus.h>
 #include <dji_osdk_ros/MissionWpUpload.h>
@@ -194,6 +195,7 @@ namespace dji_osdk_ros
       ros::ServiceServer get_drone_type_server_;
       ros::ServiceServer get_gimbal_type_server_;
       ros::ServiceServer get_camera_type_server_;
+      ros::ServiceServer get_camera_version_server_;
       /*! for flight control */
       ros::ServiceServer task_control_server_;
       ros::ServiceServer set_home_altitude_server_;
@@ -329,6 +331,7 @@ namespace dji_osdk_ros
                                 dji_osdk_ros::GetDroneType::Response &response);
       bool getGimbalTypeCallback(dji_osdk_ros::GetGimbalType::Request &request,dji_osdk_ros::GetGimbalType::Response &response);
       bool getCameraTypeCallback(dji_osdk_ros::GetCameraType::Request &request,dji_osdk_ros::GetCameraType::Response &response);
+      bool getCameraVersionCallback(dji_osdk_ros::GetCameraVersion::Request &request,dji_osdk_ros::GetCameraVersion::Response &response);
       /*! for flight control */
       bool taskCtrlCallback(FlightTaskControl::Request& request, FlightTaskControl::Response& response);
       bool setGoHomeAltitudeCallback(SetGoHomeAltitude::Request& request, SetGoHomeAltitude::Response& response);

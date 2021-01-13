@@ -86,6 +86,7 @@ namespace dji_osdk_ros
       bool startRecordVideo(const PayloadIndex& payloadIndex);
       bool stopRecordVideo(const PayloadIndex& payloadIndex);
       bool getCameraName(const PayloadIndex& payloadIndex, std::string *camera_name);
+      std::string getCameraVersion(const PayloadIndex& payloadIndex);
       /*! Parts of Gimbal */
       GimbalSingleData getGimbalData(const PayloadIndex& payloadIndex);
       bool rotateGimbal(const PayloadIndex& PayloadIndex, const GimbalRotationData& rotationData);

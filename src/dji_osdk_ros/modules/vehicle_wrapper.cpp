@@ -223,6 +223,21 @@ static T_OsdkOsalHandler osalHandler = {
     return true;
   }
 
+  std::string VehicleWrapper::getCameraVersion(const PayloadIndex& payloadIndex)
+  {
+    if (!vehicle || !vehicle->cameraManager) {
+      DERROR("vehicle or cameraManager is a null value.");
+    }
+
+    PayloadIndexType index = static_cast<PayloadIndexType>(payloadIndex);
+    CameraManager *p = vehicle->cameraManager;
+
+    DSTATUS("Start to get version of the camera %d", index);
+    std::string name = p->getCameraVersion(index);
+
+    return name;
+  }
+
   bool VehicleWrapper::setEV(const PayloadIndex& payloadIndex, const ExposureCompensation& exposureCompensation)
   {
     if (!vehicle || !vehicle->cameraManager) {

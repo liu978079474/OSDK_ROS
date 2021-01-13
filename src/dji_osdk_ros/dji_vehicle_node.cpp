@@ -214,6 +214,7 @@ void VehicleNode::initService()
   get_drone_type_server_ = nh_.advertiseService("get_drone_type", &VehicleNode::getDroneTypeCallback, this);
   get_gimbal_type_server_ = nh_.advertiseService("get_gimbal_type", &VehicleNode::getGimbalTypeCallback, this);
   get_camera_type_server_ = nh_.advertiseService("get_camera_type", &VehicleNode::getCameraTypeCallback, this);
+  get_camera_version_server_ = nh_.advertiseService("get_camera_version", &VehicleNode::getCameraVersionCallback, this);
 
   /*! @brief
    *  flight control server
@@ -1164,6 +1165,19 @@ bool VehicleNode::gimbalCtrlCallback(GimbalAction::Request& request, GimbalActio
            ptr_wrapper_->getGimbalData(static_cast<PayloadIndex>(request.payload_index)).pitch,
            ptr_wrapper_->getGimbalData(static_cast<PayloadIndex>(request.payload_index)).roll,
            ptr_wrapper_->getGimbalData(static_cast<PayloadIndex>(request.payload_index)).yaw);
+  return true;
+}
+
+bool VehicleNode::getCameraVersionCallback(dji_osdk_ros::GetCameraVersion::Request &request,dji_osdk_ros::GetCameraVersion::Response &response)
+{
+  ROS_DEBUG("called getCameraVersionCallback");
+
+  if(ptr_wrapper_ == nullptr)
+  {
+    ROS_ERROR_STREAM("Vehicle modules is nullptr");
+    return true;
+  }
+  response.camera_name = ptr_wrapper_-> getCameraVersion(static_cast<PayloadIndex>(request.payload_index));
   return true;
 }
 
